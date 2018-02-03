@@ -1,3 +1,18 @@
-<div ng-if="!$ctrl.loggedIn">
-    <h1 ng-click="$ctrl.login()">log in</h1>
-</div>
+<main>
+    <section ng-if="!$ctrl.loggedIn">
+        <h1 ng-click="$ctrl.login()">log in</h1>
+    </section>
+
+    <section ng-if="$ctrl.loggedIn">
+        <div>
+            <header>
+                <h1>Playlist inspirada en <mark>{{ $ctrl.seedTrack.name }}</mark> de 
+                    <mark>{{ $ctrl.seedTrack.artists[0].name }}</mark> </h1>
+            </header>
+        </div>
+        
+        <div ng-repeat="item in $ctrl.recommendations">
+            <p>{{ item.artists[0].name }} - <i>{{ item.name }}</i></p>
+        </div>
+    </section>
+</main>
