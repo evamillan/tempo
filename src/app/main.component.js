@@ -7,6 +7,7 @@ export const main = {
     this.instrumentalness = 0;
     this.valence = 0;
     this.recommendations = {};
+    this.searchResults = [];
 
     this.getUserTopTracks = function () {
       Spotify.getUserTopTracks({ limit: 15 }).then(data => {
@@ -41,6 +42,7 @@ export const main = {
 
     this.login = function () {
       Spotify.login().then(token => {
+        this.getUserTopTracks();
         this.loggedIn = true;
         });
     };
@@ -51,7 +53,7 @@ export const main = {
         this.danceability = features.data.danceability;
         this.instrumentalness = features.data.instrumentalness;
         this.valence = features.data.valence;
-        console.log(features.data);
+
         this.getRecommendations();
       });
     };
@@ -67,6 +69,21 @@ export const main = {
       }).then(data => {
         return this.recommendations = data.data.tracks;
       });
+    };
+
+    this.search = function(value) {
+      Spotify.search(value, 'track', {limit: 5}).then(data => {
+        this.searchResults = data.data.tracks.items;
+      });
+    };
+
+    this.setSeedTrack = function(track) {
+      this.seedTrack = track;
+      this.searchResults = [];
+      this.searchTrack = "";
+
+      this.getTrackAudioFeatures();
+      this.getRecommendations();
     };
   }
 };

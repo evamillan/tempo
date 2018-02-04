@@ -7,8 +7,15 @@
         <div class="equalizer">
             <header>
                 <h1>Playlist inspirada en <mark>{{ $ctrl.seedTrack.name }}</mark> de 
-                    <mark>{{ $ctrl.seedTrack.artists[0].name }}</mark> </h1>
+                    <mark>{{ $ctrl.seedTrack.artists[0].name }}</mark> o 
+                    <input ng-model="$ctrl.searchTrack" ng-change="$ctrl.search($ctrl.searchTrack)" 
+                           placeholder="buscar otra">
+                </h1>
             </header>
+
+            <aside ng-repeat="item in $ctrl.searchResults">
+                <p ng-click="$ctrl.setSeedTrack(item)">{{ item.artists[0].name }} - <i>{{ item.name }}</i></p>
+            </aside>
 
             <main>
                 <label for="danceability">Bailabilidad</label>
@@ -37,8 +44,8 @@
             </main>
         </div>
         
-        <div class="recommendations" ng-repeat="item in $ctrl.recommendations">
+        <section class="recommendations" ng-repeat="item in $ctrl.recommendations">
             <p>{{ item.artists[0].name }} - <i>{{ item.name }}</i></p>
-        </div>
+        </section>
     </section>
 </main>
