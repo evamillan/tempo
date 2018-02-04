@@ -44,8 +44,17 @@
             </main>
         </div>
         
-        <section class="recommendations" ng-repeat="item in $ctrl.recommendations">
-            <p>{{ item.artists[0].name }} - <i>{{ item.name }}</i></p>
+        <section>
+            <div class="recommendations" ng-repeat="item in $ctrl.recommendations">
+                <p>{{ item.artists[0].name }} - <i>{{ item.name }}</i></p>
+            </div>
+            <div>
+                
+                <button ng-if="!$ctrl.playlistCreated" ng-click="$ctrl.createPlaylist()">
+                    Crear playlist
+                </button>
+                <button ng-if="$ctrl.playlistCreated">Playlist creada</button>
+            </div>
         </section>
     </section>
 </main>

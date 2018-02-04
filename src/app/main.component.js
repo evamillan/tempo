@@ -2,12 +2,14 @@ export const main = {
   template: require('./main.template.html'),
   controller($window, Spotify) {
     this.seedTrack = {};
+    this.userID = '';
     this.energy = 0;
     this.danceability = 0;
     this.instrumentalness = 0;
     this.valence = 0;
     this.recommendations = {};
     this.searchResults = [];
+    this.playlistCreated = false;
 
     this.getUserTopTracks = () => {
       Spotify.getUserTopTracks({ limit: 15 }).then(data => {
@@ -65,6 +67,8 @@ export const main = {
     };
 
     this.getRecommendations = () => {
+      this.playlistCreated = false;
+
       Spotify.getRecommendations({
         seed_tracks: this.seedTrack.id,
         danceability: this.danceability,
@@ -94,7 +98,13 @@ export const main = {
 
     this.createPlaylist = () => {
       Spotify.createPlaylist(this.userID, {name: 'Not my tempo'}).then(response => {
-        console.log(response);
+        const playlistID = response.data.id;
+        let tracksUris = this.recommendations.map(track => {
+          return track.uri;
+        });
+
+        Spotify.addPlaylistTracks(this.userID, playlistID, tracksUris)
+               .then(response => this.playlistCreated = true)
       })
     }
   }
