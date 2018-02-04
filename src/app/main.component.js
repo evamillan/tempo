@@ -82,9 +82,11 @@ export const main = {
     };
 
     this.search = (value) => {
-      Spotify.search(value, 'track', {limit: 5}).then(data => {
-        this.searchResults = data.data.tracks.items;
-      });
+      if (value.length > 0) {
+        Spotify.search(value, 'track', {limit: 5}).then(data => {
+          this.searchResults = data.data.tracks.items;
+        });
+      } else return this.searchResults = [];
     };
 
     this.setSeedTrack = (track) => {
