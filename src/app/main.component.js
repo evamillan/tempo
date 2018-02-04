@@ -9,7 +9,7 @@ export const main = {
     this.recommendations = {};
     this.searchResults = [];
 
-    this.getUserTopTracks = function () {
+    this.getUserTopTracks = () => {
       Spotify.getUserTopTracks({ limit: 15 }).then(data => {
         let topTracks = data.data.items;
         let randomTrack = topTracks[Math.floor(Math.random()*topTracks.length)];
@@ -23,12 +23,17 @@ export const main = {
       })
     };
 
+    this.getUserID = () => {
+      Spotify.getCurrentUser().then(data => this.userID = data.data.id)
+    };
+
     if (localStorage.getItem('spotify-token')) {
       this.getUserTopTracks();
+      this.getUserID();
       this.loggedIn = true;
     };
 
-    $window.onload = function () {
+    $window.onload = () => {
       const hash = $window.location.hash;
       if ($window.location.search.substring(1).indexOf('error') !== -1) {
         // login failure
@@ -40,14 +45,15 @@ export const main = {
       }
     };
 
-    this.login = function () {
+    this.login = () => {
       Spotify.login().then(token => {
         this.getUserTopTracks();
+        this.getUserID();
         this.loggedIn = true;
         });
     };
 
-    this.getTrackAudioFeatures = function () {
+    this.getTrackAudioFeatures = () => {
       Spotify.getTrackAudioFeatures(this.seedTrack.id).then(features => {
         this.energy = features.data.energy;
         this.danceability = features.data.danceability;
@@ -58,7 +64,7 @@ export const main = {
       });
     };
 
-    this.getRecommendations = function () {
+    this.getRecommendations = () => {
       Spotify.getRecommendations({
         seed_tracks: this.seedTrack.id,
         danceability: this.danceability,
@@ -71,13 +77,13 @@ export const main = {
       });
     };
 
-    this.search = function(value) {
+    this.search = (value) => {
       Spotify.search(value, 'track', {limit: 5}).then(data => {
         this.searchResults = data.data.tracks.items;
       });
     };
 
-    this.setSeedTrack = function(track) {
+    this.setSeedTrack = (track) => {
       this.seedTrack = track;
       this.searchResults = [];
       this.searchTrack = "";
@@ -85,5 +91,11 @@ export const main = {
       this.getTrackAudioFeatures();
       this.getRecommendations();
     };
+
+    this.createPlaylist = () => {
+      Spotify.createPlaylist(this.userID, {name: 'Not my tempo'}).then(response => {
+        console.log(response);
+      })
+    }
   }
 };
