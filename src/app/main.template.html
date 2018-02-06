@@ -1,60 +1,70 @@
 <main>
-    <section ng-if="!$ctrl.loggedIn">
-        <h1 ng-click="$ctrl.login()">log in</h1>
-    </section>
+  <section class="splash" ng-if="!$ctrl.loggedIn">
+    <h1>Not quite my tempo</h1>
+    <h2>Crea playlists de Spotify completamente a tu medida</h2>
+    <p>Hecha por Eva Millán con la
+      <a href="https://beta.developer.spotify.com/documentation/web-api/" target="_blank">API de Spotify</a>
+       y AngularJS. Repositorio en 
+      <a href="https://github.com/evamillan/tempo" target="_blank">Github</a>.
+    </p>
+    <p>Para usar la app tienes que loguearte.</p>
+    <button ng-click="$ctrl.login()">CONECTAR CON SPOTIFY</button>
+  </section>
 
-    <section class="app" ng-if="$ctrl.loggedIn">
-        <div class="equalizer">
-            <header>
-                <h1>Playlist inspirada en <mark>{{ $ctrl.seedTrack.name }}</mark> de 
-                    <mark>{{ $ctrl.seedTrack.artists[0].name }}</mark> o 
-                    <input ng-model="$ctrl.searchTrack" ng-change="$ctrl.search($ctrl.searchTrack)" 
-                           placeholder="buscar otra">
-                </h1>
-            </header>
+  <section class="app" ng-if="$ctrl.loggedIn">
+    <div class="equalizer">
+      <header>
+        <h1>Playlist inspirada en
+        <mark>{{ $ctrl.seedTrack.name }}</mark>
+        <br>
+        <mark>{{ $ctrl.seedTrack.artists[0].name }}</mark>
+        </h1>
+      </header>
 
-            <aside ng-repeat="item in $ctrl.searchResults">
-                <p ng-click="$ctrl.setSeedTrack(item)">{{ item.artists[0].name }} - <i>{{ item.name }}</i></p>
-            </aside>
+      <main>
+        <label for="danceability">Bailabilidad</label>
+        <input type="range" name="danceability" ng-model="$ctrl.danceability" ng-change="$ctrl.getRecommendations()" min="0.0" max="1" step="0.05">
+        <p>{{ $ctrl.danceability * 100 | number : 0 }}</p>
 
-            <main>
-                <label for="danceability">Bailabilidad</label>
-                <input type="range" name="danceability" 
-                       ng-model="$ctrl.danceability" ng-change="$ctrl.getRecommendations()"
-                       min="0.0" max="1" step="0.05">
-                <p>{{ $ctrl.danceability * 100 | number : 0 }}</p>
+        <label for="energy">Energía</label>
+        <input type="range" name="energy" ng-model="$ctrl.energy" ng-change="$ctrl.getRecommendations()" min="0.0" max="1" step="0.05">
+        <p>{{ $ctrl.energy * 100 | number : 0 }}</p>
 
-                <label for="energy">Energía</label>
-                <input type="range" name="energy" 
-                       ng-model="$ctrl.energy" ng-change="$ctrl.getRecommendations()"
-                       min="0.0" max="1" step="0.05">
-                <p>{{ $ctrl.energy * 100 | number : 0 }}</p>
+        <label for="instrumentalness">Instrumentalidad</label>
+        <input type="range" name="instrumentalness" ng-model="$ctrl.instrumentalness" ng-change="$ctrl.getRecommendations()" min="0.0" max="1" step="0.05">
+        <p>{{ $ctrl.instrumentalness * 100 | number : 0 }}</p>
 
-                <label for="instrumentalness">Instrumentalidad</label>
-                <input type="range" name="instrumentalness" 
-                       ng-model="$ctrl.instrumentalness" ng-change="$ctrl.getRecommendations()"
-                       min="0.0" max="1" step="0.05">
-                <p>{{ $ctrl.instrumentalness * 100 | number : 0 }}</p>
+        <label for="valence">Alegría</label>
+        <input type="range" name="valence" ng-model="$ctrl.valence" ng-change="$ctrl.getRecommendations()" min="0.0" max="1" step="0.05">
+        <p>{{ $ctrl.valence * 100 | number : 0 }}</p>
+      </main>
+    </div>
 
-                <label for="valence">Alegría</label>
-                <input type="range" name="valence" 
-                       ng-model="$ctrl.valence" ng-change="$ctrl.getRecommendations()"
-                       min="0.0" max="1" step="0.05">
-                <p>{{ $ctrl.valence * 100 | number : 0 }}</p>
-            </main>
+    <section class="recommendations">
+      <aside>
+        <input ng-model="$ctrl.searchTrack" ng-change="$ctrl.search($ctrl.searchTrack)" placeholder="buscar otra canción">
+      </aside>
+
+      <main>
+        <div class="tracks" ng-repeat="item in $ctrl.recommendations" ng-hide="$ctrl.hideRecommendations">
+          <p>{{ item.artists[0].name }}</p>
+          <hr>
+          <p><i>{{ item.name }}</i></p>
         </div>
-        
-        <section>
-            <div class="recommendations" ng-repeat="item in $ctrl.recommendations">
-                <p>{{ item.artists[0].name }} - <i>{{ item.name }}</i></p>
-            </div>
-            <div>
-                
-                <button ng-if="!$ctrl.playlistCreated" ng-click="$ctrl.createPlaylist()">
-                    Crear playlist
-                </button>
-                <button ng-if="$ctrl.playlistCreated">Playlist creada</button>
-            </div>
-        </section>
+
+        <div class="link" ng-repeat="item in $ctrl.searchResults" ng-click="$ctrl.setSeedTrack(item)">
+          <p>{{ item.artists[0].name }}</p>
+          <hr>
+          <p><i>{{ item.name }}</i></p>
+        </div>
+
+        <div class="buttons">
+          <button ng-if="!$ctrl.playlistCreated" ng-click="$ctrl.createPlaylist()" ng-hide="$ctrl.hideRecommendations">
+            CREAR PLAYLIST
+          </button>
+          <button ng-if="$ctrl.playlistCreated">PLAYLIST CREADA</button>
+        </div>
+      </main>
     </section>
+  </section>
 </main>

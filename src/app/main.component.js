@@ -8,6 +8,7 @@ export const main = {
     this.instrumentalness = 0;
     this.valence = 0;
     this.recommendations = {};
+    this.hideRecommendations = false;
     this.searchResults = [];
     this.playlistCreated = false;
 
@@ -82,17 +83,23 @@ export const main = {
     };
 
     this.search = (value) => {
+
       if (value.length > 0) {
-        Spotify.search(value, 'track', {limit: 5}).then(data => {
+        this.hideRecommendations = true;
+        Spotify.search(value, 'track', {limit: 8}).then(data => {
           this.searchResults = data.data.tracks.items;
         });
-      } else return this.searchResults = [];
+      } else {
+        this.hideRecommendations = false;
+        this.searchResults = []
+      };
     };
 
     this.setSeedTrack = (track) => {
       this.seedTrack = track;
       this.searchResults = [];
       this.searchTrack = "";
+      this.hideRecommendations = false;
 
       this.getTrackAudioFeatures();
       this.getRecommendations();
