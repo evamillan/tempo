@@ -1,6 +1,6 @@
 export const main = {
   template: require('./main.template.html'),
-  controller($window, Spotify) {
+  controller: ['$window', 'Spotify', function MainController($window, Spotify) {
     this.seedTrack = {};
     this.userID = '';
     this.energy = 0;
@@ -116,5 +116,5 @@ export const main = {
                .then(response => this.playlistCreated = true)
       })
     }
-  }
+  }]
 };
